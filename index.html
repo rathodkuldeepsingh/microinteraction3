@@ -1,0 +1,243 @@
+<html>
+	<head>
+		<title>
+			ScreenDivide	
+		</title>
+		<script src="js/jquery-3.2.1.min.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<link href="https://fonts.googleapis.com/css?family=Raleway:200" rel="stylesheet">
+	</head>
+	<style>
+		.container
+		{
+			position:absolute;
+			width:106vh;
+			height:60vh;
+			background:black;
+			left:50%;
+			top:50%;
+			transform:translate(-50%, -50%);
+			overflow: hidden;
+			border:3px white solid;
+		}
+		.title{
+			position: absolute;
+			left:50%;
+			top: 10vh;
+			font-size: 3vh;
+			transform:translate(-50%,-50%);
+			font-family: 'Raleway', sans-serif;
+		}
+		.one, .two, .three{
+			width: 100.7%;
+			height: 100%;
+			/*display:block;*/
+			position: absolute;
+		}
+		.one{
+			background:url('1.jpg');
+			left: -100%;
+			background-size: contain;
+			background-repeat: no-repeat;
+		}
+		.two{
+			background:url('2.jpg');
+			left:0;
+			background-size: contain;
+			background-repeat: no-repeat;
+		}
+		.three{
+			background:url('3.jpg');
+			left:100%;
+			background-size: contain;
+			background-repeat: no-repeat;
+		}
+		.title-bar{
+			background: url('title_bar.png');
+			width:100%;
+			height:2.3%;
+			background-size: contain;
+			background-repeat: no-repeat;
+			position: absolute;
+		}
+		.dock{
+			background:url('dock.png');
+			width:64%;
+			height:4.4%;
+			background-size:contain;
+			background-repeat:no-repeat;
+			position: absolute;
+			bottom:-4.4%;
+			left: 18%;
+			transition:all 0.4s ease-in-out;
+			z-index: 10;
+		}
+		.chrome_l{
+			background:url('chrome_left.png');
+			background-repeat:no-repeat;
+			background-size: auto 100%;
+			position:absolute;
+			width:50%;
+			height:100.5%; 
+			top:2.1%;
+			z-index: 2;
+			visibility: hidden;
+		}
+		.chrome_r{
+			background:url('chrome_right.png');
+			background-repeat:no-repeat;
+			background-size: auto 100%;
+			position:absolute;
+			width:10%;
+			height:100.5%; 
+			z-index: 3;
+			top:2.1%;
+			visibility: hidden;
+		}
+		.finder_l{
+			background:url('Finder_left.png');
+			background-repeat:no-repeat;
+			background-size: auto 100%;
+			position:absolute;
+			width:100%;
+			height:100.5%; 
+			top:2.1%;
+			z-index: 2;
+			visibility: hidden;
+		}
+		.finder_r{
+			background:url('Finder_right.png');
+			background-repeat:no-repeat;
+			background-size: auto 100%;
+			position:absolute;
+			width:18.5%;
+			height:100.5%; 
+			top:2.1%;
+			z-index: 2;
+			right: 0;
+			visibility: hidden;
+		}
+
+
+	</style>
+	<body>
+		<div class="title">SCREEN DIVIDE</div>
+		<div class="container">
+			<div class="one"></div>
+			<div class="two"></div>
+			<div class="three"></div>
+			<div class="title-bar"></div>
+			<div class="dock"></div>
+			<div class="chrome_l"></div>
+			<div class="chrome_r"></div>
+			<div class="google"></div>
+			<div class="finder_l"></div>
+			<div class="finder_r"></div>
+			<div class="finder_c"></div>
+
+			
+		</div>
+		<script>
+			$(document).ready(function(){
+				var currentMousePos = { x: -1, y: -1 };
+				var corner='f';
+				var click=0;
+				var dock=0;
+    			$('.container').mousemove(function(event) {
+		        currentMousePos.x = event.pageX;
+		        currentMousePos.y = event.pageY;
+		        
+		        if(Math.abs(currentMousePos.x-$('.container').offset().left)<10)
+		        {
+		        	$('.container').css('cursor','-webkit-grab');
+		        	corner='l';
+		        }
+		        else if(Math.abs(currentMousePos.y-$('.container').offset().top-$('.container').outerHeight())<30)
+		        {	
+		        	$('.dock').css({'bottom':'0%'});
+		        	
+		        }
+		        else if(Math.abs(currentMousePos.x-$('.container').offset().left-$('.container').outerWidth())<10)
+		        {
+		        	$('.container').css('cursor','-webkit-grab');
+		        	corner='r';
+		        }
+		        else if(click==0){
+		        	$('.container').css('cursor','default');
+		        	corner='f';
+		        	$('.dock').css({'bottom':'-4.4%'});
+		        	
+		        }
+		        
+		        $('.dock').click(function(){
+		        	console.log(dock);
+		        	if(dock==0){
+		        		
+		        		$('.finder_r').css({'visibility':'visible'});
+		        		$('.finder_l').css({'visibility':'visible'});
+		        		dock=1;
+		        	}
+		        	
+		        });
+		        
+
+
+					if(corner=='l' && click==1)
+					{
+						$('.two').css({'left':currentMousePos.x-$('.container').offset().left});
+						$('.one').css({'left':currentMousePos.x-$('.container').offset().left-$('.container').outerWidth()});
+						$('.three').css({'left':currentMousePos.x-$('.container').offset().left+$('.container').outerWidth()});
+						if(dock==1)
+						{	
+							$('.finder_l').css({'left':$('.two').offset().left-$('.container').offset().left});
+							if($('.two').offset().left>$('.container').offset().left+$('.container').outerWidth()*0.2)
+							{	$('.finder_l').css({'visibility':'visible'});
+								$('.finder_r').css({'visibility':'visible'});
+								$('.chrome_l').css({'visibility':'visible','width':$('.two').offset().left-$('.container').offset().left-5});
+								$('.chrome_r').css({'visibility':'visible','left':$('.two').offset().left-$('.container').offset().left-0.1*$('.container').outerWidth()-5});
+								if($('.two').offset().left>$('.container').offset().left+$('.container').outerWidth()*0.8)
+								{
+									$('.finder_l').css({'visibility':'hidden'});
+									$('.finder_r').css({'visibility':'hidden'});
+
+								}
+								
+							}else{
+								$('.chrome_l').css({'visibility':'hidden'});
+								$('.chrome_r').css({'visibility':'hidden'});
+							}
+						}
+					}
+					if(corner=='r' && click==1)
+					{
+						$('.two').css({'left':currentMousePos.x-$('.container').outerWidth()-$('.container').offset().left});
+						$('.one').css({'left':currentMousePos.x-2*$('.container').outerWidth()-$('.container').offset().left});
+						$('.three').css({'left':currentMousePos.x-$('.container').offset().left});
+					}
+
+
+		        });
+			
+				$('.container').mousedown(function(){
+					click=1;
+					
+
+				});				
+				$('.container').mouseup(function(){
+					click=0;
+					
+
+				});		
+
+
+
+
+			});
+
+
+			
+
+
+		</script>
+	</body>
+</html>

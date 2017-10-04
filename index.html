@@ -61,7 +61,7 @@
 			position: absolute;
 		}
 		.dock{
-			background:url('Dock.png');
+			background:url('dock.png');
 			width:64%;
 			height:4.4%;
 			background-size:contain;
@@ -73,7 +73,7 @@
 			z-index: 10;
 		}
 		.chrome_l{
-			background:url('Chrome_left.png');
+			background:url('chrome_left.png');
 			background-repeat:no-repeat;
 			background-size: auto 100%;
 			position:absolute;
@@ -82,9 +82,11 @@
 			top:2.1%;
 			z-index: 2;
 			visibility: hidden;
+			transform: scale(0.2);
+			transition: transform 0.5s ease-in-out, visibility 0.5s ease-in-out;
 		}
 		.chrome_r{
-			background:url('Chrome_right.png');
+			background:url('chrome_right.png');
 			background-repeat:no-repeat;
 			background-size: auto 100%;
 			position:absolute;
@@ -92,7 +94,9 @@
 			height:100.5%; 
 			z-index: 3;
 			top:2.1%;
+			transform: scale(0.2);
 			visibility: hidden;
+			transition: transform 0.5s ease-in-out, visibility 0.5s ease-in-out;
 		}
 		.finder_l{
 			background:url('Finder_left.png');
@@ -103,7 +107,10 @@
 			height:100.5%; 
 			top:2.1%;
 			z-index: 2;
+			transform: scale(0.2);
 			visibility: hidden;
+			transform-origin: 50% 50%;
+			transition:transform 0.5s ease-in-out;
 		}
 		.finder_r{
 			background:url('Finder_right.png');
@@ -116,12 +123,41 @@
 			z-index: 2;
 			right: 0;
 			visibility: hidden;
+			transition: visibility 0.1s 0.5s ease-in-out; 
+		}
+		.info{
+			position: absolute;
+			left:50%;
+			top: 85vh;
+			font-size: 2vh;
+			transform:translate(-50%,-50%);
+			font-family: 'Raleway', sans-serif;
+		}
+		.b, .f{
+			height:8vh;
+			width:6vh;
+			
+			position: fixed;
+			top:40vh;
+		}
+		.b{	left: 5vh;
+			background: url("back.png") no-repeat center;
+			background-size: contain;
+
+		}
+		.f{
+			background: url("forward.png") no-repeat center;
+			background-size: contain;
+			right: 5vh;
 		}
 
 
 	</style>
 	<body>
 		<div class="title">SCREEN DIVIDE</div>
+		<div class="info">Go to left or right edgs of the window to stretch the nearby screen</div>
+		<a href="https://rathodkuldeepsingh.github.io/microinteraction4/"><div class="b"></div></a>
+		<a href="https://rathodkuldeepsingh.github.io/microinteraction5/"><div class="f"></div></a>
 		<div class="container">
 			<div class="one"></div>
 			<div class="two"></div>
@@ -172,9 +208,11 @@
 		        $('.dock').click(function(){
 		        	console.log(dock);
 		        	if(dock==0){
-		        		
+		        		$('.finder_l').css({'visibility':'visible','transform':'scale(1)','left':$('.two').offset().left-$('.container').offset().left});
+		        		if(corner!=r)
+		        		{
 		        		$('.finder_r').css({'visibility':'visible'});
-		        		$('.finder_l').css({'visibility':'visible'});
+		        		}
 		        		dock=1;
 		        	}
 		        	
@@ -187,26 +225,21 @@
 						$('.two').css({'left':currentMousePos.x-$('.container').offset().left});
 						$('.one').css({'left':currentMousePos.x-$('.container').offset().left-$('.container').outerWidth()});
 						$('.three').css({'left':currentMousePos.x-$('.container').offset().left+$('.container').outerWidth()});
-						if(dock==1)
-						{	
-							$('.finder_l').css({'left':$('.two').offset().left-$('.container').offset().left});
-							if($('.two').offset().left>$('.container').offset().left+$('.container').outerWidth()*0.2)
-							{	$('.finder_l').css({'visibility':'visible'});
-								$('.finder_r').css({'visibility':'visible'});
-								$('.chrome_l').css({'visibility':'visible','width':$('.two').offset().left-$('.container').offset().left-5});
-								$('.chrome_r').css({'visibility':'visible','left':$('.two').offset().left-$('.container').offset().left-0.1*$('.container').outerWidth()-5});
-								if($('.two').offset().left>$('.container').offset().left+$('.container').outerWidth()*0.8)
-								{
-									$('.finder_l').css({'visibility':'hidden'});
-									$('.finder_r').css({'visibility':'hidden'});
+						
 
-								}
-								
-							}else{
-								$('.chrome_l').css({'visibility':'hidden'});
-								$('.chrome_r').css({'visibility':'hidden'});
-							}
+						if($('.two').offset().left>$('.container').offset().left+$('.container').outerWidth()*0.2)
+						{
+							
+							$('.chrome_l').css({'transform':'scale(1)','visibility':'visible','left':'0','width':$('.two').offset().left-$('.container').offset().left-5});
+							$('.chrome_r').css({'transform':'scale(1)','visibility':'visible','left':$('.two').offset().left-$('.container').offset().left-0.1*$('.container').outerWidth()-5});
 						}
+						else{
+							$('.chrome_l').css({'transform':'scale(0.2)','visibility':'visible','left':$('.one').offset().left/2+$('.container').offset().left/1.25});
+							$('.chrome_r').css({'transform':'scale(0.2)','visibility':'hidden','right':$('body').outerWidth()-$('.chrome_l').offset().left-$('.chrome_l').outerWidth()*0.2});
+						}
+
+
+						
 					}
 					if(corner=='r' && click==1)
 					{
